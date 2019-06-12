@@ -1,0 +1,3 @@
+Não, a classe Funcionario não atende todos os princípios SOLID, pois
+não respeita o Single Responsability Principle. Devido que, a função calcularPagamento
+deveria ser implementada na classe Pagamento e não na classe Funcionario.
