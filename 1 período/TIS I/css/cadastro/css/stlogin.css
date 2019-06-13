@@ -1,0 +1,54 @@
+/*******************************************
+Arquivo Style CSS usado pela Ana Luiza 
+*******************************************/
+
+.imglogin {
+    width: 35%;
+}
+
+.imglogin {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#login-guilu {
+    background: url(http://blog.quintadellarte.com.br/wp-content/uploads/2017/11/142135-marcenaria-e-carpintaria-com-o-que-devo-me-preocupar-primeiro-810x540.jpg);
+    padding-top: 200px;
+    text-align: center;
+    background-attachment: relative;
+    background-position: center center;
+    min-height: 900px;
+    width: 100%;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+form {
+    display: block;
+}
+
+#login2-guilu {
+    background-color: #104E8B;
+    border-radius: 18px;
+    min-height: 550px;
+}
+
+#login2-guilu label {
+    font-size: 20px;
+    color: white;
+}
+
+#login2-guilu .row {
+    margin-top: 10px;
+}
+
+#btnFormulario {
+    margin-top: 35px;
+}

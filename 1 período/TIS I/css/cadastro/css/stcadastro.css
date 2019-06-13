@@ -1,0 +1,60 @@
+/*******************************************
+Arquivo Style CSS usado pelo Guilherme Diniz
+*******************************************/
+
+#cad-guilu{
+
+    background: url(https://i0.wp.com/revistaapolice.com.br/wp-content/uploads/2015/06/encanador.jpg);
+    padding-top: 200px;
+	text-align:center;
+	background-attachment: relative;
+	background-position: center center;
+	min-height: 900px;
+	width: 100%;
+
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+
+}
+
+#cad2-guilu{
+
+    background-color: #104E8B;
+    border-radius: 18px;
+    min-height: 550px;
+
+}
+
+#cad2-guilu label{
+
+    font-size: 20px;
+    color:white;
+
+}
+
+#cad2-guilu .row{
+
+    margin-top:10px;
+
+}
+
+#btnFormulario{
+
+    margin-top:35px;
+
+}
+
+#imagem{
+
+    border-radius: 4px;
+    background-color: #fff;
+
+}
