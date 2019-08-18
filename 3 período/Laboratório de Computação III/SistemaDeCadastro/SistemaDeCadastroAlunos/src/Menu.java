@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 public class Menu {
 
 	private static Scanner sc = new Scanner(System.in);
+	private final static String nomeArquivo = "teste.txt";
 
 	/**
 	 * Funcao responsavel por fazer o backup dos dados
@@ -26,35 +27,64 @@ public class Menu {
 	 * @throws IOException
 	 */
 
-	private static void backup(String arquivo, String copy) throws IOException, ClassNotFoundException {
-		FileInputStream fileInputStream = new FileInputStream(arquivo);
-		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+	public static void backupDados(String arquivo, String copy) throws IOException {
+		if (arquivo != null) {
+			FileInputStream file = new FileInputStream(arquivo);
+			@SuppressWarnings("resource")
+			DataInputStream entrada = new DataInputStream(file);
+			FileOutputStream backup = new FileOutputStream(copy);
+			PrintStream saida = new PrintStream(backup);
 
-		FileOutputStream fileOutputStream = new FileOutputStream(copy);
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			while (entrada.available() != 0) {
+				@SuppressWarnings("deprecation")
+				String line = entrada.readLine();
+				saida.println(line);
+			} // end while
+			saida.flush();
+			saida.close();
+			backup.close();
+		} else {
+			System.out.println("ERRO: Arquivo invalido.");
+		}
+	}
 
-		while (fileInputStream.available() != 0) {
-			Aluno empr = (Aluno) objectInputStream.readObject();
-			objectOutputStream.writeObject(empr);
-			objectOutputStream.flush();
-		} // end while
-		objectInputStream.close();
-		objectOutputStream.close();
-		fileInputStream.close();
-	} // end backup()
+	/**
+	 * Funcao responsavel por fazer o backup dos objetos
+	 * 
+	 * @param arquivo - arquivo original
+	 * @param copy    - backup do arquivo original
+	 * @throws IOException
+	 */
+
+	private static void backupObjetos(String arquivo, String copy) throws IOException, ClassNotFoundException {
+		if (arquivo != null) {
+			FileInputStream fileInputStream = new FileInputStream(arquivo);
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+			FileOutputStream fileOutputStream = new FileOutputStream(copy);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+			while (fileInputStream.available() != 0) {
+				Aluno empr = (Aluno) objectInputStream.readObject();
+				objectOutputStream.writeObject(empr);
+				objectOutputStream.flush();
+			} // end while
+			objectInputStream.close();
+			objectOutputStream.close();
+			fileInputStream.close();
+		} else {
+			System.out.println("ERRO: Arquivo invalido. ");
+		}
+	}
 
 	private static void gravarDados() {
 
-		try {
-			// Define o nome do arquivo a ser trabalhado
-			System.out.print("Informe o nome do arquivo a ser gravado: ");
-			String nomeArquivo = Teclado.readLine();
+		// Objetos utilizados na manipulacao do arquivo e seus dados
+		FileOutputStream arqSaida;
 
-			// Objetos utilizados na manipulacao do arquivo e seus dados
-			FileOutputStream arqSaida = new FileOutputStream(nomeArquivo);
-			PrintStream saida = new PrintStream(arqSaida);
+		try (PrintStream saida = new PrintStream(arqSaida = new FileOutputStream(nomeArquivo, true))) {
 
-			System.out.print("Informe o número de registros a serem gravados: ");
+			System.out.print("\nInforme o número de registros a serem gravados: ");
 			int numRegistros = Teclado.readInt();
 
 			// Adiciona os registros desejados
@@ -73,7 +103,7 @@ public class Menu {
 			saida.close();
 			arqSaida.close();
 
-			System.out.println("Dados Gravados com sucesso");
+			System.out.println("\nDados Gravados com sucesso");
 		} catch (Exception e) { // Tratamento generico da excessão ocorrida
 			System.out.println("O seguinte erro ocorreu: " + e.toString());
 		}
@@ -84,10 +114,7 @@ public class Menu {
 	 */
 	private static void gravarObjetos() {
 
-		System.out.print("Informe o nome do arquivo a ser gravado: (nome.txt) ");
-		String nomeArquivo = Teclado.readLine();
-
-		try (ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+		try (ObjectOutputStream saida = new ObjectOutputStream(new FileOutputStream(nomeArquivo, true))) {
 
 			System.out.print("Informe o número de registros a serem gravados: ");
 			int numRegistros = Teclado.readInt();
@@ -107,22 +134,9 @@ public class Menu {
 				saida.writeObject(aluno);
 			} // end for
 
-			System.out.println("Deseja fazer backup do arquivo? (y/n)");
-			char answer = sc.next().toLowerCase().charAt(0);
-
-			// verifica o que foi digitado pelo usuário
-			if (answer == 'y') {
-				System.out.print("Informe o nome do arquivo a ser gravado: (nome.txt)");
-				String nomeBackup = Teclado.readLine();
-				// método responsável por fazer o backup
-				backup(nomeArquivo, nomeBackup);
-			} else {
-				System.out.println("AVISO: Backup não será realizado. ");
-			}
-
-			System.out.println("Dados gravados com sucesso...");
+			System.out.println("\nDados gravados com sucesso...");
 		} catch (FileNotFoundException e) {
-			System.out.println("O Arquivo informado nao existe.\n" + e.toString());
+			System.out.println("O arquivo informado nao existe.\n" + e.toString());
 		} catch (IOException e) {
 			System.out.println("O seguinte erro de I/O ocorreu:\n" + e.toString());
 		} catch (Exception e) { // Tratamento generico da excessão ocorrida
@@ -135,9 +149,6 @@ public class Menu {
 	 */
 	private static void pesquisaObjetos() {
 
-		// Define o nome do arquivo a ser trabalhado
-		System.out.print("Informe o nome do arquivo a ser pesquisado: (nome.txt) ");
-		String nomeArquivo = Teclado.readLine();
 		int numRegPesquisados = 0;
 		FileInputStream arqEntrada;
 
@@ -173,15 +184,12 @@ public class Menu {
 	}
 
 	private static void pesquisaDados() {
-		
-		// Define o nome do arquivo a ser trabalhado
-		System.out.print("Informe o nome do arquivo a ser pesquisado: ");
-		String nomeArquivo = Teclado.readLine();
+
 		int numRegPesquisados = 0;
 		@SuppressWarnings("unused")
 		FileInputStream arqEntrada;
-		
-		try (DataInputStream entrada = new DataInputStream(new FileInputStream(nomeArquivo))){
+
+		try (DataInputStream entrada = new DataInputStream(new FileInputStream(nomeArquivo))) {
 
 			System.out.print("Digite o nome ou idade do aluno(a) a ser pesquisado: ");
 			String nome = Teclado.readLine();
@@ -202,14 +210,14 @@ public class Menu {
 				String idadeLinha = listaPalavras.nextToken();
 
 				numRegPesquisados++;
-				
+
 				if (nomeLinha.startsWith(nome)) {
 					System.out.println(linha);
 					System.out.println("Registro encontrado!\n");
 					registroEncontrado = true;
 					break;
-				} 
-			} 
+				}
+			}
 			if (!registroEncontrado)
 				System.out.println("Registro nao encontrado!\n");
 		} catch (FileNotFoundException e) {
@@ -222,19 +230,47 @@ public class Menu {
 		System.out.println("Num. Registros Pesquisados: " + numRegPesquisados);
 	}
 
+	/**
+	 * Método responsável por fazer o backup do arquivo
+	 */
 	private static void salvarArquivo() {
 
+		System.out.print("\nDeseja fazer backup do arquivo? (y/n) ");
+		char answer = sc.next().toLowerCase().charAt(0);
+		try {
+			// verifica o que foi digitado pelo usuário
+			if (answer == 'y') {
+
+				System.out.print("\nInforme o nome do arquivo a ser gravado (nome.txt): ");
+				String nomeBackup = Teclado.readLine();
+
+				// define se quer gravar objeto ou dados
+				System.out.println("\nDeseja gravar dados ou objetos? (d/o)");
+				char ch = sc.next().toLowerCase().charAt(0);
+				if (ch == 'd') {
+					// método responsável por fazer o backup
+					backupDados(nomeArquivo, nomeBackup);
+				} else {
+					backupObjetos(nomeArquivo, nomeBackup);
+				}
+
+				System.out.println("\nBackup realizado com sucesso...");
+			} else {
+				System.out.println("AVISO: Backup não será realizado. ");
+			}
+		} catch (IOException e) {
+			System.out.println("Ocorreu o seguinte erro: " + e.toString());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Método responsável por gerar estatísticas lidas no arquivo
 	 */
+	@SuppressWarnings("unused")
 	private static void gerarEstatisticas() {
 
-		// Define o nome do arquivo a ser trabalhado
-		System.out.print("Informe o nome do arquivo a ser pesquisado: ");
-		String nomeArquivo = Teclado.readLine();
-		@SuppressWarnings("unused")
 		FileInputStream arqEntrada;
 		int numRegPesquisados = 0;
 
@@ -246,8 +282,6 @@ public class Menu {
 
 		try (DataInputStream entrada = new DataInputStream(arqEntrada = new FileInputStream(nomeArquivo))) {
 
-			boolean registroEncontrado = false;
-
 			// Realiza a pesquisa no arquivo
 			while (entrada.available() != 0) {
 
@@ -255,9 +289,7 @@ public class Menu {
 				String linha = entrada.readLine();
 				StringTokenizer listaPalavras = new StringTokenizer(linha); // Pega uma linha e gera um vetor com as
 																			// palavras desta linha
-				@SuppressWarnings("unused")
 				String codigoLinha = listaPalavras.nextToken();
-				@SuppressWarnings("unused")
 				String nomeLinha = listaPalavras.nextToken();
 				String idadeLinha = listaPalavras.nextToken();
 
@@ -274,10 +306,6 @@ public class Menu {
 				}
 				numRegPesquisados++;
 			}
-
-			// caso o registro não for encontrado
-			if (!registroEncontrado)
-				System.out.println("Registro nao encontrado!\n");
 			// calcula a média
 			mediaIdade = (somaIdade / qtdeTotalAlunos);
 		} catch (FileNotFoundException e) {
@@ -293,14 +321,13 @@ public class Menu {
 		System.out.println("M.I - Maior idade: " + maiorIdade);
 		System.out.println("\nRegistros testados: " + numRegPesquisados);
 	}
-	
+
 	/**
-	 * Método responsável por chamar duas funções 
-	 * func - gravarDados()
-	 * func - gravarObjetos()
+	 * Método responsável por chamar duas funções func - gravarDados() func -
+	 * gravarObjetos()
 	 */
 	private static void gravar() {
-		System.out.print("Deseja gravar dados ou objetos? (d/o) ");
+		System.out.print("\nDeseja gravar dados ou objetos? (d/o) ");
 		char ch = sc.next().toLowerCase().charAt(0);
 		if (ch == 'd') {
 			gravarDados();
@@ -308,14 +335,13 @@ public class Menu {
 			gravarObjetos();
 		}
 	}
-	
+
 	/**
-	 * Método responsável por chamar duas funções 
-	 * func - pesquisaDados()
-	 * func - pesquisaObjetos()
+	 * Método responsável por chamar duas funções func - pesquisaDados() func -
+	 * pesquisaObjetos()
 	 */
 	private static void pesquisar() {
-		System.out.print("Deseja pesquisar dados ou objetos? (d/o) ");
+		System.out.print("\nDeseja pesquisar dados ou objetos? (d/o) ");
 		char ch = sc.next().toLowerCase().charAt(0);
 		if (ch == 'd') {
 			pesquisaDados();
