@@ -9,7 +9,7 @@
   define('HOST', 'localhost');
   define('USUARIO', 'id7693065_root');
   //define('USUARIO', 'root');
-  define('SENHA', 'estreet2' );
+  define('SENHA', '' );
   //define('SENHA', '' );
   define('DB', 'id7693065_user');
 
