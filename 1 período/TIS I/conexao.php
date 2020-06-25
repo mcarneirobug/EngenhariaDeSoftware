@@ -2,7 +2,7 @@
   $servidor = "mysql:dbname=id7693065_user;host=localhost";
   $usuario  = "id7693065_root";
   //$usuario = "root";
-  $senha    = "estreet2";
+  $senha    = "";
   //$senha = "";
   $dbname   = "id7693065_user";
 
